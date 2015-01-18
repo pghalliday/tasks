@@ -1,0 +1,11 @@
+tasks:
+  build: .
+  command: npm start
+  ports: 
+    - "5000:5000"
+  volumes:
+    - .:/code
+  links:
+    - mongo
+mongo:
+  image: mongo:2.6.7
