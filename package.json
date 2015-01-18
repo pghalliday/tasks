@@ -2,11 +2,17 @@
   "name": "tasks",
   "version": "0.1.0",
   "scripts": {
-    "start": "coffee index.coffee"
+    "prestart": "gulp dist",
+    "start": "node ./dist/server/index.js"
   },
   "dependencies": {
     "coffee-script": "^1.8.0",
+    "gulp": "^3.8.10",
+    "gulp-clean": "^0.3.1",
+    "gulp-coffee": "^2.2.0",
+    "gulp-util": "^3.0.2",
     "mongodb": "^1.4.28",
-    "q": "^1.1.2"
+    "q": "^1.1.2",
+    "q-io": "^1.11.6"
   }
 }
