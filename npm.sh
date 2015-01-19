@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo fig run tasks npm $*
+fig run tasks npm $*
