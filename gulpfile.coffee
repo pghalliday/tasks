@@ -13,7 +13,7 @@ gulp.task 'dist:server', ['clean'], ->
     )
     .pipe(gulp.dest './dist/server/')
 
-gulp.task 'dist:client', ['dist:client:coffee', 'dist:client:html'], ->
+gulp.task 'dist:client', ['dist:client:coffee', 'dist:client:html', 'dist:client:vendor'], ->
 
 gulp.task 'dist:client:coffee', ['clean'], ->
   gulp.src('./src/client/coffee/**/*.coffee')
@@ -26,6 +26,10 @@ gulp.task 'dist:client:coffee', ['clean'], ->
 gulp.task 'dist:client:html', ['clean'], ->
   gulp.src('./src/client/**/*.html')
     .pipe(gulp.dest './dist/client/')
+
+gulp.task 'dist:client:vendor', ['clean'], ->
+  gulp.src('./node_modules/angular/angular.min.js')
+    .pipe(gulp.dest './dist/client/vendor/')
 
 gulp.task 'clean', ->
   gulp.src('dist')
