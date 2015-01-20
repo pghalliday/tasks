@@ -1,6 +1,6 @@
 tasks:
   build: .
-  command: npm start
+  command: gulp develop
   ports: 
     - "5000:5000"
   volumes:

@@ -2,35 +2,58 @@ gulp = require 'gulp'
 gulpUtil = require 'gulp-util'
 coffee = require 'gulp-coffee'
 clean = require 'gulp-clean'
+nodemon = require 'gulp-nodemon'
 
-gulp.task 'dist', ['dist:server', 'dist:client']
+serverSrc = './src/server/**/*.coffee'
+clientCoffeeSrc = './src/client/coffee/**/*.coffee'
+clientHtmlSrc = './src/client/**/*.html'
+clientVendorSrc = './node_modules/angular/angular.min.js'
 
-gulp.task 'dist:server', ['clean'], ->
-  gulp.src('./src/server/**/*.coffee')
+src = [
+  serverSrc
+  clientCoffeeSrc
+  clientHtmlSrc
+  clientVendorSrc
+]
+
+gulp.task 'develop', ['build'], ->
+  gulp.watch src, ['build']
+  nodemon
+    script: './build/server/index.js'
+    watch: './build/server'
+    ext: 'js'
+    delay: 10
+  .on 'restart', ->
+    gulpUtil.log 'restarted server'
+
+gulp.task 'build', ['build:server', 'build:client']
+
+gulp.task 'build:server', ['clean'], ->
+  gulp.src(serverSrc)
     .pipe(
       coffee
         bare: true
     )
-    .pipe(gulp.dest './dist/server/')
+    .pipe(gulp.dest './build/server/')
 
-gulp.task 'dist:client', ['dist:client:coffee', 'dist:client:html', 'dist:client:vendor'], ->
+gulp.task 'build:client', ['build:client:coffee', 'build:client:html', 'build:client:vendor'], ->
 
-gulp.task 'dist:client:coffee', ['clean'], ->
-  gulp.src('./src/client/coffee/**/*.coffee')
+gulp.task 'build:client:coffee', ['clean'], ->
+  gulp.src(clientCoffeeSrc)
     .pipe(
       coffee
         bare: true
     )
-    .pipe(gulp.dest './dist/client/js/')
+    .pipe(gulp.dest './build/client/js/')
 
-gulp.task 'dist:client:html', ['clean'], ->
-  gulp.src('./src/client/**/*.html')
-    .pipe(gulp.dest './dist/client/')
+gulp.task 'build:client:html', ['clean'], ->
+  gulp.src(clientHtmlSrc)
+    .pipe(gulp.dest './build/client/')
 
-gulp.task 'dist:client:vendor', ['clean'], ->
-  gulp.src('./node_modules/angular/angular.min.js')
-    .pipe(gulp.dest './dist/client/vendor/')
+gulp.task 'build:client:vendor', ['clean'], ->
+  gulp.src(clientVendorSrc)
+    .pipe(gulp.dest './build/client/vendor/')
 
 gulp.task 'clean', ->
-  gulp.src('dist')
+  gulp.src('build')
     .pipe(clean())
