@@ -22,9 +22,6 @@ gulp.task 'develop', ['build'], ->
     script: './build/server/index.js'
     watch: './build/server'
     ext: 'js'
-    delay: 10
-  .on 'restart', ->
-    gulpUtil.log 'restarted server'
 
 gulp.task 'build', ['build:server', 'build:client']
 
