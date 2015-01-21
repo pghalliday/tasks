@@ -1,27 +1,36 @@
 gulp = require 'gulp'
-gulpUtil = require 'gulp-util'
+browserify = require 'browserify'
+source = require 'vinyl-source-stream'
+buffer = require 'vinyl-buffer'
+sourcemaps = require 'gulp-sourcemaps'
+uglify = require 'gulp-uglify'
 coffee = require 'gulp-coffee'
-clean = require 'gulp-clean'
+gulpUtil = require 'gulp-util'
+del = require 'del'
 nodemon = require 'gulp-nodemon'
 
-serverSrc = './src/server/**/*.coffee'
-clientCoffeeSrc = './src/client/coffee/**/*.coffee'
-clientHtmlSrc = './src/client/**/*.html'
-clientVendorSrc = './node_modules/angular/angular.min.js'
+serverSrc = 'src/server/**/*.coffee'
+clientCoffeeSrc = 'src/client/cjsx/**/*.cjsx'
+clientHtmlSrc = 'src/client/**/*.html'
 
 src = [
   serverSrc
   clientCoffeeSrc
   clientHtmlSrc
-  clientVendorSrc
 ]
 
-gulp.task 'develop', ['build'], ->
+script = './build/server/index.js'
+
+gulp.task 'development', ['build'], ->
   gulp.watch src, ['build']
   nodemon
-    script: './build/server/index.js'
-    watch: './build/server'
+    script: script
+    watch: 'build/server/'
     ext: 'js'
+
+gulp.task 'start', ['build'], ->
+  nodemon
+    script: script
 
 gulp.task 'build', ['build:server', 'build:client']
 
@@ -33,24 +42,25 @@ gulp.task 'build:server', ['clean'], ->
     )
     .pipe(gulp.dest './build/server/')
 
-gulp.task 'build:client', ['build:client:coffee', 'build:client:html', 'build:client:vendor'], ->
+gulp.task 'build:client', ['build:client:cjsx', 'build:client:html']
 
-gulp.task 'build:client:coffee', ['clean'], ->
-  gulp.src(clientCoffeeSrc)
-    .pipe(
-      coffee
-        bare: true
-    )
-    .pipe(gulp.dest './build/client/js/')
+gulp.task 'build:client:cjsx', ['clean'], ->
+  browserify
+    entries: './src/client/cjsx/app.cjsx'
+    extensions: '.cjsx'
+    debug: true
+  .transform('coffee-reactify')
+  .bundle()
+  .pipe(source 'app.js')
+  .pipe(buffer())
+  .pipe(sourcemaps.init {loadmaps: true})
+  .pipe(uglify())
+  .pipe(sourcemaps.write './')
+  .pipe(gulp.dest './build/client/js/')
 
 gulp.task 'build:client:html', ['clean'], ->
   gulp.src(clientHtmlSrc)
     .pipe(gulp.dest './build/client/')
 
-gulp.task 'build:client:vendor', ['clean'], ->
-  gulp.src(clientVendorSrc)
-    .pipe(gulp.dest './build/client/vendor/')
-
-gulp.task 'clean', ->
-  gulp.src('build')
-    .pipe(clean())
+gulp.task 'clean', (callback) ->
+  del 'build', callback

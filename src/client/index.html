@@ -1,20 +1,9 @@
 <html>
   <head>
     <title>Tasks</title>
-    <script src="vendor/angular.min.js"></script>
     <script src="js/app.js"></script>
   </head>
-  <body ng-app="tasks" ng-controller="MainCtrl">
-    <div ng-repeat="task in tasks | orderBy: 'status'">
-      <span ng-show="task.status === 'in progress'" ng-click="todo(task)">&lt;-</span>
-      <span ng-show="task.status === 'done'" ng-click="inProgress(task)">&lt;-</span>
-      {{task.summary}} - status: {{task.status}}
-      <span ng-show="task.status === 'todo'" ng-click="inProgress(task)">-&gt;</span>
-      <span ng-show="task.status === 'in progress'" ng-click="done(task)">-&gt;</span>
-    </div>
-    <form ng-submit="addTask()">
-      <input type="text" placeholder="summary" ng-model="summary"/>
-      <button type="submit">Add</button>
-    </form>
+  <body>
+    <div id="content"></div>
   </body>
 </html>
