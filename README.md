@@ -1,7 +1,7 @@
 tasks
 =====
 
-Capturing and querying JIRA time series data
+Personal task management
 
 Notes
 =====
