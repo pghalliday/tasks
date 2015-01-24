@@ -1,5 +1,5 @@
 apps = require 'q-io/http-apps'
 
-module.exports = (db) ->
+module.exports = (client) ->
   (request) ->
-    apps.ok 'Hello, World!'
+    apps.ok 'Hello, world!'

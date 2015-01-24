@@ -1,0 +1,14 @@
+{
+  "collectCoverage": true,
+  "setupTestFrameworkScriptFile": "./setup.js",
+  "scriptPreprocessor": "./preprocessor.js",
+  "unmockedModulePathPatterns": [
+    "../../node_modules/react"
+  ],
+  "testPathDirs": [
+    "."
+  ],
+  "testFileExtensions": [
+    "cjsx"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "collectCoverage": true,
+  "setupTestFrameworkScriptFile": "./setup.js",
+  "scriptPreprocessor": "./preprocessor.js",
+  "testPathDirs": [
+    "."
+  ],
+  "testFileExtensions": [
+    "coffee"
+  ]
+}
