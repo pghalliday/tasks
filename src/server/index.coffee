@@ -5,7 +5,7 @@ path = require 'path'
 MongoClient = require('mongodb').MongoClient
 api = require './api'
 
-url = 'mongodb://mongo:27017/tasks'
+url = process.env.DATABASE_URL || 'mongodb://mongo:27017/tasks'
 root = path.resolve path.join __dirname, '../client'
 port = 5000
 

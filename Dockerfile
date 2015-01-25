@@ -6,4 +6,5 @@ ENV PATH=/code/node_modules/.bin:$PATH
 RUN chown -R tasks:tasks /code
 USER tasks
 RUN npm install
+EXPOSE 5000
 CMD gulp start
