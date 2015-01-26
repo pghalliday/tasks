@@ -1,21 +1,28 @@
 q = require 'q'
-http = require 'q-io/http'
-apps = require 'q-io/http-apps'
 path = require 'path'
 MongoClient = require('mongodb').MongoClient
-api = require './api'
+express = require 'express'
+passport = require 'passport'
+Api = require './api'
 
 url = process.env.MONGODB_URL || 'mongodb://mongo:27017/tasks'
 root = path.resolve path.join __dirname, '../client'
 port = 5000
 
+app = express()
+app.use express.static root
+
+auth = (request, response, next) ->
+  if !request.isAuthenticated()
+    response.sendStatus 401
+  else
+    next()
+
 q()
   .then ->
     q.ninvoke MongoClient, 'connect', url
   .then (db) ->
-    defaultRoute = apps.FileTree root
-    branchRoutes =
-      'api': api db
-    server = http.Server apps.Branch branchRoutes, defaultRoute
-    server.listen port
+    api = Api auth, db
+    app.use '/api', api
+    q.ninvoke app, 'listen', port
   .done()
